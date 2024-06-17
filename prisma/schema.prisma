@@ -6,15 +6,56 @@ generator client {
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+    provider  = "postgresql"
+    url       = env("DATABASE_URL")
+    directUrl = env("DIRECT_URL")
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model JobListing {
+    id                 String     @id @default(cuid())
+    jobTitle           String
+    jobDescription     String
+    jobLocation        String
+    remoteOk           Boolean
+    commitment         Commitment
+    salartLowerBound   Int
+    salartUpperBound   Int
+    equityLowerBound   Int
+    equityUpperBound   Int
+    ExperienceRequired Int
+    Company            Company    @relation(fields: [companyId], references: [id])
+    companyId          String
+    createdAt          DateTime   @default(now())
+    updatedAt          DateTime   @updatedAt
+}
 
-    @@index([name])
+enum Commitment {
+    FULLTIME
+    INTERNSHIP
+    CONTRACT
+}
+
+model Company {
+    id                 String @id @default(cuid())
+    companyName        String
+    companyDescription String
+    companyLocation    String
+    headCount          Int
+    batch              String
+    techStack          String
+    websiteUrl         String
+    twitterUrl         String
+    profilePictureUrl  String
+    JobListings JobListing[]
+    founders    Founder[]
+}
+
+model Founder {
+    id                 String  @id @default(cuid())
+    founderName        String
+    founderDescription String
+    linkedinUrl        String
+    companyId          String
+    profilePictureUrl  String
+    Company            Company @relation(fields: [companyId], references: [id])
 }
