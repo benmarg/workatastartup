@@ -1,6 +1,5 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
     provider = "prisma-client-js"
 }
@@ -13,20 +12,42 @@ datasource db {
 
 model JobListing {
     id                 String     @id @default(cuid())
-    jobTitle           String
-    jobDescription     String
-    jobLocation        String
-    remoteOk           Boolean
+    title              String
+    description        String
+    location           String
+    remote             Remote
     commitment         Commitment
-    salartLowerBound   Int
-    salartUpperBound   Int
-    equityLowerBound   Int
-    equityUpperBound   Int
+    department         Department
+    salaryLowerBound   Int
+    salaryUpperBound   Int
+    equityLowerBound   Float
+    equityUpperBound   Float
     ExperienceRequired Int
+    visaRequired       Boolean
     Company            Company    @relation(fields: [companyId], references: [id])
     companyId          String
     createdAt          DateTime   @default(now())
     updatedAt          DateTime   @updatedAt
+}
+
+enum Department {
+    Engineering
+    Design
+    Product
+    Science
+    Sales
+    Marketing
+    Support
+    Operations
+    HR
+    Finance
+    Legal
+}
+
+enum Remote {
+    inPerson
+    remoteOk
+    remoteOnly
 }
 
 enum Commitment {
@@ -36,26 +57,40 @@ enum Commitment {
 }
 
 model Company {
-    id                 String @id @default(cuid())
-    companyName        String
-    companyDescription String
-    companyLocation    String
-    headCount          Int
-    batch              String
-    techStack          String
-    websiteUrl         String
-    twitterUrl         String
-    profilePictureUrl  String
-    JobListings JobListing[]
-    founders    Founder[]
+    id                String       @id @default(cuid())
+    name              String
+    description       String
+    about             String?
+    location          String
+    headCount         Int
+    batch             String
+    techStack         String
+    websiteUrl        String
+    twitterUrl        String
+    profilePictureUrl String
+    Industry          String
+    JobListings       JobListing[]
+    founders          Founder[]
+    createdAt         DateTime     @default(now())
+    updatedAt         DateTime     @updatedAt
 }
 
 model Founder {
-    id                 String  @id @default(cuid())
+    id                 String   @id @default(cuid())
     founderName        String
     founderDescription String
     linkedinUrl        String
     companyId          String
     profilePictureUrl  String
-    Company            Company @relation(fields: [companyId], references: [id])
+    Company            Company  @relation(fields: [companyId], references: [id])
+    createdAt          DateTime @default(now())
+    updatedAt          DateTime @updatedAt
+}
+
+model SavedJobs {
+    userId       String   @unique
+    FavoriteJobs String[]
+    HiddenJobs   String[]
+    
+    @@index([userId])
 }
