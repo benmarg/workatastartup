@@ -1,5 +1,9 @@
 import { Badge } from "@/components/ui/badge";
-import { USDollarCompact, capitalizeFirstLetter, getHeadcountBound } from "@/lib/utils";
+import {
+  USDollarCompact,
+  capitalizeFirstLetter,
+  getHeadcountBound,
+} from "@/lib/utils";
 import { api } from "@/trpc/server";
 import { type Remote } from "@prisma/client";
 import { MapPin, Tag, Users } from "lucide-react";
@@ -28,10 +32,9 @@ const JobsContainer: FC<JobsContainerProps> = async ({ searchParams }) => {
   const demographic = searchParams?.demographic;
   const Companies = await api.company.getAll({
     ...headcountBound,
-    department: role,
+    //department: role,
     remote: remote as Remote[] | undefined,
   });
-
 
   return (
     <div className="col-span-5">
