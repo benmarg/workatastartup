@@ -8,6 +8,7 @@ import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import Footer from "@/components/layout/Footer";
 import NavBar from "@/components/layout/NavBar";
 import { cn } from "@/lib/utils";
+import { ClerkProvider } from "@clerk/nextjs";
 
 export const metadata = {
   title: "Create T3 App",
@@ -26,21 +27,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body
-        className={cn(
-          "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable,
-        )}
-      >
-        <TRPCReactProvider>
-          <MaxWidthWrapper>
-            <NavBar />
-            {children}
-          </MaxWidthWrapper>
-          <Footer />
-        </TRPCReactProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body
+          className={cn(
+            "min-h-screen bg-background font-sans antialiased",
+            fontSans.variable,
+          )}
+        >
+          <TRPCReactProvider>
+            <MaxWidthWrapper>
+              <NavBar />
+              {children}
+            </MaxWidthWrapper>
+            <Footer />
+          </TRPCReactProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
