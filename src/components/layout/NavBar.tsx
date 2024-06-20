@@ -1,3 +1,4 @@
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { type FC } from "react";
@@ -11,10 +12,15 @@ const NavBar: FC = () => {
             <Image src="/image.png" alt="logo" width={48} height={48} />
           </Link>
           <Link href="/">Companies & Jobs</Link>
-          <Link href="/">Inbox</Link>
+          <Link href="/inbox">Inbox</Link>
         </div>
         <div className="flex items-center gap-4">
-          <Link href="/">My Profile</Link>
+          <SignedOut>
+            <SignInButton />
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
           <Link href="/"></Link>
         </div>
       </div>

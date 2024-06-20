@@ -124,4 +124,31 @@ export const userRouter = createTRPCRouter({
         },
       });
     }),
+  getThreadsByUserId: publicProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      return ctx.db.thread.findMany({
+        where: {
+          OR: [
+            {
+              startedById: input.userId,
+            },
+            {
+              sentToId: input.userId,
+            },
+          ],
+        },
+        include: {
+          Company: true,
+          messages: true,
+        },
+        orderBy: {
+          updatedAt: "desc",
+        },
+      });
+    }),
 });

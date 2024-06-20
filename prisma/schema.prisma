@@ -28,6 +28,7 @@ model JobListing {
     companyId          String
     createdAt          DateTime   @default(now())
     updatedAt          DateTime   @updatedAt
+    Thread             Thread[]
 }
 
 enum Department {
@@ -73,6 +74,7 @@ model Company {
     founders          Founder[]
     createdAt         DateTime     @default(now())
     updatedAt         DateTime     @updatedAt
+    Thread            Thread[]
 }
 
 model Founder {
@@ -91,6 +93,35 @@ model SavedJobs {
     userId       String   @unique
     FavoriteJobs String[]
     HiddenJobs   String[]
-    
+
     @@index([userId])
+}
+
+model Thread {
+    id                  String     @id @default(cuid())
+    startedById         String
+    startedByName       String
+    startedByPictureUrl String
+    sentToId            String
+    sentToName          String
+    sentToPictureUrl    String
+    Company             Company    @relation(fields: [companyId], references: [id])
+    companyId           String
+    JobListing          JobListing @relation(fields: [jobListingId], references: [id])
+    jobListingId        String
+    messages            Message[]
+    createdAt           DateTime   @default(now())
+    updatedAt           DateTime   @updatedAt
+}
+
+model Message {
+    id               String   @id @default(cuid())
+    threadId         String
+    Thread           Thread   @relation(fields: [threadId], references: [id])
+    message          String
+    sentById         String
+    sentByName       String
+    sentByPictureUrl String
+    createdAt        DateTime @default(now())
+    updatedAt        DateTime @updatedAt
 }

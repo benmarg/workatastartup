@@ -12,6 +12,10 @@ const config = {
                 protocol: 'https',
                 hostname: 'bookface-images.s3.amazonaws.com',
             },
+            {
+                protocol: 'https',
+                hostname: 'dashboard.clerk.com',
+            }
         ],
     }
 };
