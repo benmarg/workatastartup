@@ -15,6 +15,10 @@ const config = {
             {
                 protocol: 'https',
                 hostname: 'dashboard.clerk.com',
+            },
+            {
+                protocol: 'https',
+                hostname: 'img.clerk.com',
             }
         ],
     }

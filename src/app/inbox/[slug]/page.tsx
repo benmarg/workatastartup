@@ -1,7 +1,13 @@
+import { MessageTextArea } from "@/components/MessageTextArea";
 import { Input } from "@/components/ui/input";
-import { firstNameLastInitial, formatDistanceCompact } from "@/lib/utils";
+import {
+  capitalizeFirstLetter,
+  firstNameLastInitial,
+  formatDistanceCompact,
+} from "@/lib/utils";
 import { api } from "@/trpc/server";
 import { auth } from "@clerk/nextjs/server";
+import { MapPin, Tag, Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { type FC } from "react";
@@ -15,6 +21,7 @@ const Inbox: FC<InboxProps> = async ({ params }) => {
   if (!userId) {
     return <div>You are not signed in</div>;
   }
+
   const threads = await api.user.getThreadsByUserId({ userId });
   const selectedThread = threads.find((thread) => thread.id === params.slug);
 
@@ -103,43 +110,73 @@ const Inbox: FC<InboxProps> = async ({ params }) => {
               <p>Founder</p>
             </div>
           </div>
-          <div className="flex flex-col gap-6 px-4 py-2">
-            {selectedThread.messages.map((message) => {
-              return (
-                <div
-                  key={message.id}
-                  className="flex w-full items-center gap-2"
-                >
-                  <Image
-                    className="aspect-square max-h-10 max-w-10 rounded-full"
-                    src={message.sentByPictureUrl}
-                    alt={message.sentByName}
-                    width={100}
-                    height={100}
-                  />
-                  <div className="flex w-full flex-col gap-1">
-                    <div className="flex justify-between">
-                      <p className="text-sm font-medium">
-                        {message.sentByName}
-                      </p>
-                      <p className="text-sm font-medium text-gray-600">
-                        {formatDistanceCompact(message.createdAt ?? new Date())}
-                      </p>
-                    </div>
+          <div className="flex flex-col gap-6 overflow-y-scroll px-4 py-2">
+            {selectedThread.messages.map((message) => (
+              <div key={message.id} className="flex w-full items-start gap-2">
+                <Image
+                  className="aspect-square max-h-10 max-w-10 self-start rounded-full"
+                  src={message.sentByPictureUrl}
+                  alt={message.sentByName}
+                  width={100}
+                  height={100}
+                />
+                <div className="flex w-full flex-col gap-1">
+                  <div className="flex justify-between">
+                    <p className="text-sm font-medium">{message.sentByName}</p>
                     <p className="text-sm font-medium text-gray-600">
-                      {message.message}
+                      {formatDistanceCompact(message.createdAt ?? new Date())}
                     </p>
                   </div>
+                  <p className="whitespace-break-spaces text-sm font-medium text-gray-600">
+                    {message.message}
+                  </p>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
         </div>
         <div>
-          <Input className="bg-white" placeholder="Send a message..." />
+          <MessageTextArea threadId={selectedThread.id} />
         </div>
       </div>
-      <div className="flex h-1/2 flex-col bg-white"></div>
+      <div className="flex h-1/2 flex-col gap-3 border border-gray-300 bg-white p-4">
+        <Image
+          src={selectedThread.Company.profilePictureUrl}
+          alt={selectedThread.Company.name}
+          width={100}
+          height={100}
+        />
+        <a
+          href={`/companies/${selectedThread.Company.id}`}
+          className="text-xl font-bold text-yc"
+        >
+          {selectedThread.Company.name} ({selectedThread.Company.batch})
+        </a>
+        <div className="flex flex-col gap-2">
+          <p className="text-sm">{selectedThread.Company.description}</p>
+          <span className="flex items-center gap-1">
+            <Users className=" h-4 w-4" />
+            {selectedThread.Company.headCount} People
+          </span>
+          <span className="flex items-center gap-1">
+            <MapPin className="mr-1 h-4 w-4" />
+            {selectedThread.Company.location}
+          </span>
+          <span className="flex items-center gap-1">
+            <Tag className="mr-1 h-4 w-4" />
+            {capitalizeFirstLetter(selectedThread.Company.Industry)}
+          </span>
+          <Link
+            href={selectedThread.Company.websiteUrl}
+            className="cursor-pointer text-sm text-yc"
+            target="_blank"
+          >
+            {capitalizeFirstLetter(
+              selectedThread.Company.websiteUrl.split("/")[2] ?? "",
+            )}
+          </Link>
+        </div>
+      </div>
     </div>
   );
 };

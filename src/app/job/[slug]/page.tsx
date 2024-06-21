@@ -62,11 +62,13 @@ const JobPage: FC<JobPageProps> = async ({ params }) => {
           </div>
           <JobsButtons jobId={job.id} userId={"123"} />
         </div>
-        <div className="mt-4 flex flex-col gap-4">
-          <h3 className="text-xl font-medium">About {job.Company.name}</h3>
+        <div className="mt-4 flex flex-col gap-4 whitespace-break-spaces">
+          <h3 className="whitespace-break-spaces text-xl font-medium">
+            About {job.Company.name}
+          </h3>
           {job.Company.about}
           <h3 className="text-xl font-medium">Job Description</h3>
-          {job.description}
+          <p className="whitespace-break-spaces">{job.description}</p>
         </div>
       </div>
       <div className="mt-8 flex flex-col items-center gap-4">
