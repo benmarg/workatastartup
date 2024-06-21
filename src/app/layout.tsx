@@ -38,7 +38,7 @@ export default function RootLayout({
           )}
         >
           <TRPCReactProvider>
-            <MaxWidthWrapper>
+            <MaxWidthWrapper className="min-h-[calc(100vh-200px)]">
               <NavBar />
               {children}
               <Toaster />

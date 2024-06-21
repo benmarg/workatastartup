@@ -8,6 +8,7 @@ import { api } from "@/trpc/server";
 import { type Remote } from "@prisma/client";
 import { MapPin, Tag, Users } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { type FC } from "react";
 import FavoriteIcon from "./FavoriteIcon";
 import { Button } from "./ui/button";
@@ -37,23 +38,33 @@ const JobsContainer: FC<JobsContainerProps> = async ({ searchParams }) => {
   });
 
   return (
-    <div className="col-span-5">
-      {Companies.map((company) => (
+    <div className="col-span-5 overflow-auto">
+      {[
+        ...Companies,
+        ...Companies,
+        ...Companies,
+        ...Companies,
+        ...Companies,
+        ...Companies,
+      ].map((company) => (
         <div key={company.id} className="flex gap-2 bg-beigelight p-4 pr-6">
-          <Image
-            src={company.profilePictureUrl}
-            alt={company.name}
-            width={100}
-            height={100}
-            className="h-24 w-24"
-          />
+          <Link href={`/companies/${company.id}`} className="h-24 w-24">
+            <Image
+              src={company.profilePictureUrl}
+              alt={company.name}
+              width={100}
+              height={100}
+            />
+          </Link>
           <div className="ml-2 flex flex-col gap-2">
-            <p className="text-lg font-semibold">
-              {company.name}
-              <span className="pl-2 text-xs text-gray-500">
-                ({company.batch})
-              </span>
-            </p>
+            <Link href={`/companies/${company.id}`}>
+              <p className="text-xl font-semibold">
+                {company.name}
+                <span className="pl-2 text-xs text-gray-500">
+                  ({company.batch})
+                </span>
+              </p>
+            </Link>
             <p className="text-sm">{company.description}</p>
             <div className="flex gap-1">
               <Badge className="w-fit text-sm" variant="outline">

@@ -13,25 +13,26 @@ const FavoriteIcon: FC<FavoriteIconProps> = ({ jobId }) => {
   const utils = api.useUtils();
   const router = useRouter();
   const { isLoaded, user } = useUser();
-  if (!isLoaded || !user?.id) {
-    return <></>;
-  }
 
   const { data: favoriteJobs } = api.user.getSavedJobs.useQuery({
-    userId: user.id,
+    userId: user?.id ?? "",
   });
   const { mutate: addFavoriteJob } = api.user.addFavoriteJob.useMutation({
     onSuccess: async () => {
-      await utils.user.getSavedJobs.invalidate({ userId: user.id });
+      await utils.user.getSavedJobs.invalidate({ userId: user?.id ?? "" });
       router.refresh();
     },
   });
   const { mutate: removeFavoriteJob } = api.user.removeFavoriteJob.useMutation({
     onSuccess: async () => {
-      await utils.user.getSavedJobs.invalidate({ userId: user.id });
+      await utils.user.getSavedJobs.invalidate({ userId: user?.id ?? "" });
       router.refresh();
     },
   });
+
+  if (!isLoaded || !user?.id) {
+    return <></>;
+  }
 
   if (favoriteJobs?.FavoriteJobs.includes(jobId)) {
     return (

@@ -3,10 +3,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { USDollarCompact, capitalizeFirstLetter } from "@/lib/utils";
 import { api } from "@/trpc/server";
+import { auth } from "@clerk/nextjs/server";
 import { Clock, MapPin, Users } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { type FC } from "react";
-import { auth } from "@clerk/nextjs/server";
 
 type JobPageProps = {
   params: { slug: string };
@@ -18,7 +19,6 @@ const JobPage: FC<JobPageProps> = async ({ params }) => {
   const job = await api.company.getJobListing({ jobId: slug });
 
   const { userId } = auth();
-  
 
   if (!job || !job.Company) {
     return <div>Job not found</div>;
@@ -28,9 +28,17 @@ const JobPage: FC<JobPageProps> = async ({ params }) => {
     <>
       <div className="pt-8">
         <span>
-          <a className="cursor-pointer text-blue-500">Companies</a> /{" "}
-          <a className="cursor-pointer text-blue-500">{job?.Company.name}</a> /{" "}
-          {job.title}
+          <Link className="cursor-pointer text-blue-500" href={"/"}>
+            Companies
+          </Link>{" "}
+          /{" "}
+          <Link
+            className="cursor-pointer text-blue-500"
+            href={`/companies/${job?.Company.id}`}
+          >
+            {job?.Company.name}
+          </Link>{" "}
+          / {job.title}
         </span>
       </div>
       <div className="mt-6 rounded-md border border-gray-300 bg-beigelight px-2 py-10 sm:px-10">
