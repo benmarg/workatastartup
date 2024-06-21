@@ -44,7 +44,7 @@ export const MessageTextArea: FC<MessageTextAreaProps> = ({ threadId }) => {
       />
       <Button
         className="w-full"
-        disabled={!isLoaded || !user}
+        disabled={!isLoaded || !user || threadId === "0"}
         onClick={() => {
           if (message.trim().length === 0) {
             toast({

@@ -1,3 +1,4 @@
+import { MessageTextArea } from "@/components/MessageTextArea";
 import { Input } from "@/components/ui/input";
 import { firstNameLastInitial, formatDistanceCompact } from "@/lib/utils";
 import { api } from "@/trpc/server";
@@ -12,6 +13,7 @@ const Inbox: FC = async ({}) => {
     return <div>You are not signed in</div>;
   }
   const threads = await api.user.getThreadsByUserId({ userId });
+  const selectedThread = { id: "0" };
 
   return (
     <div className="grid grid-cols-4 gap-4 pt-4">
@@ -66,8 +68,18 @@ const Inbox: FC = async ({}) => {
           );
         })}
       </div>
-      <div className="col-span-2 bg-gray-200">1234</div>
-      <div className="flex flex-col bg-white">1234</div>
+      <div className="col-span-2 flex flex-col justify-between border border-gray-300 bg-white">
+        <div>
+          <div className="flex gap-3 border-b border-gray-300 bg-neutral-100 p-4">
+            <div></div>
+          </div>
+          <div className="flex flex-col gap-6 overflow-y-scroll px-4 py-2"></div>
+        </div>
+        <div>
+          <MessageTextArea threadId={selectedThread.id} />
+        </div>
+      </div>
+      <div className="flex h-1/2 flex-col gap-3 border border-gray-300 bg-white p-4"></div>
     </div>
   );
 };

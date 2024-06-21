@@ -6,6 +6,7 @@ import { api } from "@/trpc/server";
 import { Clock, MapPin, Users } from "lucide-react";
 import Image from "next/image";
 import { type FC } from "react";
+import { auth } from "@clerk/nextjs/server";
 
 type JobPageProps = {
   params: { slug: string };
@@ -15,6 +16,9 @@ const JobPage: FC<JobPageProps> = async ({ params }) => {
   const slug = params.slug;
 
   const job = await api.company.getJobListing({ jobId: slug });
+
+  const { userId } = auth();
+  
 
   if (!job || !job.Company) {
     return <div>Job not found</div>;
@@ -60,7 +64,7 @@ const JobPage: FC<JobPageProps> = async ({ params }) => {
               </div>
             </div>
           </div>
-          <JobsButtons jobId={job.id} userId={"123"} />
+          <JobsButtons jobId={job.id} userId={userId} />
         </div>
         <div className="mt-4 flex flex-col gap-4 whitespace-break-spaces">
           <h3 className="whitespace-break-spaces text-xl font-medium">
