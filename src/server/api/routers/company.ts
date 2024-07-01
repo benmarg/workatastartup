@@ -60,6 +60,20 @@ export const companyRouter = createTRPCRouter({
       });
     }),
 
+  getCompany: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return ctx.db.company.findUnique({
+        where: {
+          id: input.id,
+        },
+        include: {
+          JobListings: true,
+          founders: true,
+        },
+      });
+    }),
+
   getJobListing: publicProcedure
     .input(z.object({ jobId: z.string() }))
     .query(async ({ ctx, input }) => {
@@ -70,8 +84,8 @@ export const companyRouter = createTRPCRouter({
         include: {
           Company: {
             include: {
-              JobListings: true
-            }
+              JobListings: true,
+            },
           },
         },
       });

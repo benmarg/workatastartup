@@ -151,4 +151,37 @@ export const userRouter = createTRPCRouter({
         },
       });
     }),
+
+  sendMessage: publicProcedure
+    .input(
+      z.object({
+        threadId: z.string(),
+        sentById: z.string(),
+        sentByName: z.string(),
+        sentByPictureUrl: z.string(),
+        message: z.string(),
+      }),
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.db.$transaction(async (trx) => {
+        await trx.thread.update({
+          where: {
+            id: input.threadId,
+          },
+          data: {
+            updatedAt: new Date(),
+          },
+        });
+
+        return trx.message.create({
+          data: {
+            threadId: input.threadId,
+            sentById: input.sentById,
+            sentByName: input.sentByName,
+            sentByPictureUrl: input.sentByPictureUrl,
+            message: input.message,
+          },
+        });
+      });
+    }),
 });

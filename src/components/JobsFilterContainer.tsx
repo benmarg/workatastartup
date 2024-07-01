@@ -35,7 +35,7 @@ const JobsFilterContainer: FC = () => {
   );
 
   return (
-    <div className="col-span-2 flex h-full flex-col justify-center gap-4 bg-beigelight p-4">
+    <div className="col-span-2 flex h-[90vh] flex-col justify-start gap-4 bg-beigelight p-4">
       <h1 className="text-2xl font-medium">Filter</h1>
       <div className="flex flex-col gap-2 text-lg font-medium">
         <div>

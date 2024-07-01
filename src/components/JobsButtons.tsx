@@ -5,15 +5,36 @@ import { EyeIcon, EyeOff, Star } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { type FC } from "react";
 import { Button } from "./ui/button";
+import { useToast } from "./ui/use-toast";
 
 interface JobsButtonsProps {
   jobId: string;
-  userId: string;
+  userId: string | null;
 }
 
 const JobsButtons: FC<JobsButtonsProps> = ({ jobId, userId }) => {
   const utils = api.useUtils();
   const router = useRouter();
+  const { toast } = useToast();
+
+  if (!userId) {
+    return (
+      <>
+        <Button
+          className=""
+          onClick={() => {
+            toast({
+              title: "You are not signed in",
+              description: "Please sign in to apply for this job",
+              variant: "destructive",
+            });
+          }}
+        >
+          Apply
+        </Button>
+      </>
+    );
+  }
 
   const { data: savedJobs } = api.user.getSavedJobs.useQuery({
     userId: userId,

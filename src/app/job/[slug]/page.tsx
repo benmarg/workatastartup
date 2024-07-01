@@ -3,8 +3,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { USDollarCompact, capitalizeFirstLetter } from "@/lib/utils";
 import { api } from "@/trpc/server";
+import { auth } from "@clerk/nextjs/server";
 import { Clock, MapPin, Users } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { type FC } from "react";
 
 type JobPageProps = {
@@ -16,6 +18,8 @@ const JobPage: FC<JobPageProps> = async ({ params }) => {
 
   const job = await api.company.getJobListing({ jobId: slug });
 
+  const { userId } = auth();
+
   if (!job || !job.Company) {
     return <div>Job not found</div>;
   }
@@ -24,9 +28,17 @@ const JobPage: FC<JobPageProps> = async ({ params }) => {
     <>
       <div className="pt-8">
         <span>
-          <a className="cursor-pointer text-blue-500">Companies</a> /{" "}
-          <a className="cursor-pointer text-blue-500">{job?.Company.name}</a> /{" "}
-          {job.title}
+          <Link className="cursor-pointer text-blue-500" href={"/"}>
+            Companies
+          </Link>{" "}
+          /{" "}
+          <Link
+            className="cursor-pointer text-blue-500"
+            href={`/companies/${job?.Company.id}`}
+          >
+            {job?.Company.name}
+          </Link>{" "}
+          / {job.title}
         </span>
       </div>
       <div className="mt-6 rounded-md border border-gray-300 bg-beigelight px-2 py-10 sm:px-10">
@@ -60,13 +72,15 @@ const JobPage: FC<JobPageProps> = async ({ params }) => {
               </div>
             </div>
           </div>
-          <JobsButtons jobId={job.id} userId={"123"} />
+          <JobsButtons jobId={job.id} userId={userId} />
         </div>
-        <div className="mt-4 flex flex-col gap-4">
-          <h3 className="text-xl font-medium">About {job.Company.name}</h3>
+        <div className="mt-4 flex flex-col gap-4 whitespace-break-spaces">
+          <h3 className="whitespace-break-spaces text-xl font-medium">
+            About {job.Company.name}
+          </h3>
           {job.Company.about}
           <h3 className="text-xl font-medium">Job Description</h3>
-          {job.description}
+          <p className="whitespace-break-spaces">{job.description}</p>
         </div>
       </div>
       <div className="mt-8 flex flex-col items-center gap-4">
